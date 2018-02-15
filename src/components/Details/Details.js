@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
 
 import "./Details.css"
 
@@ -7,7 +8,7 @@ import { addToCart } from "../../ducks/product";
 
 export function Details( { addToCart, history, products, match } ) {
 
-	const product = {}
+	const product = products.find(product => product.name === match.params.name)
 
 	const {
 		  description
@@ -17,21 +18,33 @@ export function Details( { addToCart, history, products, match } ) {
 		, price
 	} = product;
 
+	let addToCartAndRedirect = () => {
+		addToCart(id);
+		history.goBack();
+	}
+
+	// function addToCartAndRedirect (){
+	// 	addToCart(id);
+	// 	history.goBack();
+	// }
+
 	return (
 		<div className="details">
-			<h3 className="details__back-to-shop">Back to shop</h3>
+			<Link to='/shop'>
+				<h3 className="details__back-to-shop">Back to shop</h3>
+			</Link>
 			<img
-				alt={ "" /* products name */ }
+				alt={ product.name /* products name */ }
 				className="details__logo"
-				src={ "" /* products logo */ }
+				src={ product.logo /* products logo */ }
 			/>
-		<h1 className="details__name">{ /* products name*/ }</h1>
-			<p className="details__description">{ /* products description*/ }</p>
+		<h1 className="details__name">{ product.name/* products name*/ }</h1>
+			<p className="details__description">{ product.description/* products description*/ }</p>
 			<button
 				className="details__buy"
-				onClick={ addToCart( id ) }
+				onClick={ addToCartAndRedirect }
 			>
-				Buy now for ${ /* products price */ }!
+				Buy now for ${ product.price/* products price */ }!
 			</button>
 		</div>
 	);
